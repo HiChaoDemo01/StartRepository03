@@ -44,7 +44,7 @@
         [manager GET:urlStr parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
             
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            //NSLog(@"%@",[[NSString alloc]initWithData:responseObject encoding:4]);
+//            NSLog(@"%@",[[NSString alloc]initWithData:responseObject encoding:4]);
             NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
             NSArray *itemsArr=dic[@"data"][@"items"];
             NSMutableArray *dataArr=[NSMutableArray new];

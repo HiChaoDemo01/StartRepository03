@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface CommunityVC : UIViewController
+#import "CusNavigationVC.h"
+@interface CommunityVC : CusNavigationVC
 
 @end

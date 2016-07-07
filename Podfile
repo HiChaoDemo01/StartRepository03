@@ -8,5 +8,5 @@ target 'HiChaoDemo01' do
    pod 'Masonry'
    pod 'SDAutoLayout'
    pod 'SDWebImage'
-
+   pod 'FMDB'
 end

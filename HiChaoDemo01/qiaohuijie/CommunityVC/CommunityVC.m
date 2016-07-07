@@ -23,8 +23,12 @@ typedef enum : NSUInteger {
 @interface CommunityVC ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     int offset;
-    UIButton *haveChoosenBtn;
+    NSInteger whichBtn;
+    BOOL chooseBtnState[3];
+    CGFloat rowHeight;
+    CGRect sildeTwigFrame;
 }
+@property(strong,nonatomic)UIScrollView *bgScroll;
 @property(nonatomic,strong)NSMutableArray *scrollDataArr;
 @property(strong,nonatomic)UIScrollView *topScroll;
 @property(strong,nonatomic)UIPageControl *pageControl;
@@ -48,15 +52,30 @@ typedef enum : NSUInteger {
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    sildeTwigFrame=CGRectMake(0, 42, kMainBoundsW/3, 3);
+    chooseBtnState[0]=YES;
+    self.cusTitleLab.text=@"社区";
+    [self.editOrCameraBtn setBackgroundImage:[UIImage imageNamed:@"button_head_camera"] forState:UIControlStateNormal];
+    
+    [self createBGScroll];
     [self getData];
+
+    
+}
+#pragma mark--创建背景scrollView
+-(void)createBGScroll
+{
+    _bgScroll=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, kMainBoundsW, kMainBoundsH-64)];
+    _bgScroll.backgroundColor=[UIColor orangeColor];
+    _bgScroll.delegate=self;
+    [self.view addSubview:_bgScroll];
     
 }
 #pragma mark - 创建顶部scrollView
 -(void)createScrollView
 {
-    UIView *view=[UIView new];
-    [self.view addSubview:view];
-    UIScrollView *topScroll=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, kMainBoundsW, 220)];
+
+    UIScrollView *topScroll=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, kMainBoundsW, 220)];
     for (int i=0; i<self.scrollDataArr.count+1; i++) {
        
         UIButton *scrollImageBtn=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -80,25 +99,32 @@ typedef enum : NSUInteger {
     topScroll.contentSize=CGSizeMake(kMainBoundsW*(self.scrollDataArr.count+1), 220);
     topScroll.pagingEnabled=YES;
     topScroll.showsHorizontalScrollIndicator=NO;
-    [self.view addSubview:topScroll];
+    [_bgScroll addSubview:topScroll];
     _topScroll=topScroll;
-    UIPageControl *pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, 244, kMainBoundsW, 40)];
+    UIPageControl *pageControl=[[UIPageControl alloc]initWithFrame:CGRectMake(0, _topScroll.frame.origin.y+topScroll.size.height-40, kMainBoundsW, 40)];
     pageControl.numberOfPages=self.scrollDataArr.count;
     pageControl.currentPageIndicatorTintColor=[UIColor redColor];
-    [self.view addSubview:pageControl];
+    [_bgScroll addSubview:pageControl];
     _pageControl=pageControl;
 }
+
 #pragma mark--创建tableView
 -(void)createTableView
 {
 
-    UITableView *table=[[UITableView alloc]initWithFrame:CGRectMake(0, 64+_topScroll.size.height, kMainBoundsW, kMainBoundsH-64-_topScroll.size.height) style:UITableViewStylePlain];
+    UITableView *table=[[UITableView alloc]initWithFrame:CGRectMake(0, _topScroll.frame.origin.y+_topScroll.size.height, kMainBoundsW, 5000) style:UITableViewStylePlain];
+    table.showsVerticalScrollIndicator=NO;
     table.backgroundColor=[UIColor grayColor];
-    [self.view addSubview:table];
+    [_bgScroll addSubview:table];
     table.delegate=self;
     table.dataSource=self;
     _tableView=table;
+    _tableView.scrollEnabled=NO;
     [_tableView registerClass:[QHJCusTableViewCell class] forCellReuseIdentifier:@"cell"];
+    
+    _bgScroll.contentSize=CGSizeMake(kMainBoundsW, 5000);
+    _bgScroll.showsVerticalScrollIndicator=NO;
+    
 }
 #pragma mark--获取数据
 -(void)getData
@@ -123,21 +149,54 @@ typedef enum : NSUInteger {
     }];
     
 }
-#pragma mark--选择分类的button点击事件
+#pragma mark
 -(void)chooseCategory:(UIButton *)sender
 {
-    [UIView animateWithDuration:0.5 animations:^{
+    chooseBtnState[whichBtn]=NO;
+    chooseBtnState[sender.tag]=YES;
+    whichBtn=sender.tag;
+    [self.tableDataArr removeAllObjects];
+    
+    [UIView animateWithDuration:0.3 animations:^{
         _sildeTwig.center=CGPointMake(sender.center.x, _sildeTwig.center.y);
-    } completion:nil];
-    [haveChoosenBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [sender setTitleColor:[UIColor colorWithRed:255/255.0 green:0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
-    haveChoosenBtn=sender;
+        
+    } completion:^(BOOL finished) {
+        if(sender.tag==chooseBtn_attention)
+        {
+            [_tableView reloadData];
+            [QHJRequestDataTools requestTableViewDataWithUrl:@"http://api-v2.mall.hichao.com/forum/timeline?nav_id=6&nav_name=%E5%85%B3%E6%B3%A8&flag=&user_id=&gc=appstore&gf=iphone&gn=mxyc_ip&gv=6.6.3&gi=282DC040-8A37-4D6D-92A1-55AC237988B1&gs=640x1136&gos=8.4&access_token=" andWith:^(NSMutableArray *returnValue) {
+                [self.tableDataArr addObjectsFromArray:returnValue];
+                [_tableView reloadData];
+            }];
+        }
+        if (sender.tag==chooseBtn_trend) {
+            [_tableView reloadData];
+            [QHJRequestDataTools requestTableViewDataWithUrl:@"http://api-v2.mall.hichao.com/forum/timeline?nav_id=5&nav_name=%E7%83%AD%E9%97%A8&flag=&user_id=&gc=appstore&gf=iphone&gn=mxyc_ip&gv=6.6.3&gi=282DC040-8A37-4D6D-92A1-55AC237988B1&gs=640x1136&gos=8.4&access_token=" andWith:^(NSMutableArray *returnValue) {
+                [self.tableDataArr addObjectsFromArray:returnValue];
+                [_tableView reloadData];
+            }];
+
+        }
+        if (sender.tag==chooseBtn_favourite) {
+            [_tableView reloadData];
+            [QHJRequestDataTools requestTableViewDataWithUrl:@"http://api-v2.mall.hichao.com/forum/timeline?nav_id=2&nav_name=%E7%BA%A2%E4%BA%BA&flag=&user_id=&gc=appstore&gf=iphone&gn=mxyc_ip&gv=6.6.3&gi=282DC040-8A37-4D6D-92A1-55AC237988B1&gs=640x1136&gos=8.4&access_token=" andWith:^(NSMutableArray *returnValue) {
+                [self.tableDataArr addObjectsFromArray:returnValue];
+                [_tableView reloadData];
+            }];
+
+        }
+
+    }];
+    sildeTwigFrame=_sildeTwig.frame;
+
+    
     
 }
 #pragma mark--tableView的区头设置
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, kMainBoundsW, 45)];
+    headerView.backgroundColor=[UIColor whiteColor];
         NSArray *btnTitle=@[@"热门",@"关注",@"红人"];
         for (int i=0; i<3; i++) {
             UIButton *chooseBtn=[UIButton buttonWithType:0];
@@ -146,13 +205,15 @@ typedef enum : NSUInteger {
             chooseBtn.frame=CGRectMake(kMainBoundsW/3*i, 5, kMainBoundsW/3, 35);
             
             [chooseBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-           
+            if (chooseBtnState[i]) {
+                [chooseBtn setTitleColor:[UIColor colorWithRed:1 green:0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
+            }
             chooseBtn.titleLabel.font=[UIFont systemFontOfSize:15];
             
             [chooseBtn addTarget:self action:@selector(chooseCategory:) forControlEvents:UIControlEventTouchUpInside];
             [headerView addSubview:chooseBtn];
         }
-    UIView *slideTwig=[[UIView alloc]initWithFrame:CGRectMake(0, 42, kMainBoundsW/3, 3)];
+    UIView *slideTwig=[[UIView alloc]initWithFrame:sildeTwigFrame];
     slideTwig.backgroundColor=[UIColor colorWithRed:1 green:0 blue:102/255.0 alpha:1];
     [headerView addSubview:slideTwig];
     _sildeTwig=slideTwig;
@@ -173,16 +234,21 @@ typedef enum : NSUInteger {
 #pragma mark--设置行高
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 600;
+    return rowHeight;
 }
 #pragma mark--设置cell
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QHJCusTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    
     cell.model=self.tableDataArr[indexPath.row];
-    [cell removeView];
+    cell.whichClickBtn=whichBtn;
+    rowHeight=cell.rowHeight;
+    
     return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//    NSLog(@"选择cell");
 }
 #pragma mark--选择scrollView上的image
 -(void)chooseScrollImage:(UIButton *)sender
@@ -197,6 +263,11 @@ typedef enum : NSUInteger {
         scrollView.contentOffset=CGPointMake(0, 0);
         _pageControl.currentPage=0;
     }
+}
+#pragma mark--背景scrollView的代理方法
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+ 
 }
 #pragma mark--定时器
 -(void)changeScrollImg

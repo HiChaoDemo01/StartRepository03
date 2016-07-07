@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface ShoppingCarVC : UIViewController
+#import "CusNavigationVC.h"
+@interface ShoppingCarVC : CusNavigationVC
 
 @end

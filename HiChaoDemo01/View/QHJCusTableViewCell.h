@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "CommunityTableDataModel.h"
+#import "CommunityTagsModel.h"
+#import "CommunityHeadPicModel.h"
+#import "CommunityCommentsModel.h"
 @interface QHJCusTableViewCell : UITableViewCell
 @property(strong,nonatomic)CommunityTableDataModel *model;
+@property(assign,nonatomic)CGFloat rowHeight;
+@property(assign,nonatomic)NSInteger whichClickBtn;
 -(void)removeView;
 @end

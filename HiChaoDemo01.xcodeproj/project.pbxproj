@@ -55,6 +55,10 @@
 		04292BCD1D2BDC9E00A3171A /* QHJRequestDataTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 04292BCC1D2BDC9E00A3171A /* QHJRequestDataTools.m */; };
 		04292BD01D2BDCF800A3171A /* CommunityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04292BCF1D2BDCF800A3171A /* CommunityVC.m */; };
 		04292BD31D2BDD8B00A3171A /* CommunityScrollDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04292BD21D2BDD8B00A3171A /* CommunityScrollDataModel.m */; };
+		0429692B1D2C9D3C004D2CDC /* icon_pull_share_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0429692A1D2C9D3C004D2CDC /* icon_pull_share_black@2x.png */; };
+		0429692D1D2C9D40004D2CDC /* icon_bbs_titlebar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0429692C1D2C9D40004D2CDC /* icon_bbs_titlebar@2x.png */; };
+		042969301D2CE109004D2CDC /* CusNavigationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0429692F1D2CE109004D2CDC /* CusNavigationVC.m */; };
+		042969331D2CFA7E004D2CDC /* StarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 042969321D2CFA7E004D2CDC /* StarModel.m */; };
 		04CB17B71D2C65F70051735E /* SQSAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB17B61D2C65F70051735E /* SQSAction.m */; };
 		04CB17BA1D2C66010051735E /* SQSComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB17B91D2C66010051735E /* SQSComponent.m */; };
 		04CB17BD1D2C7E9F0051735E /* SQSItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB17BC1D2C7E9F0051735E /* SQSItems.m */; };
@@ -135,6 +139,12 @@
 		04292BCF1D2BDCF800A3171A /* CommunityVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityVC.m; sourceTree = "<group>"; };
 		04292BD11D2BDD8B00A3171A /* CommunityScrollDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommunityScrollDataModel.h; sourceTree = "<group>"; };
 		04292BD21D2BDD8B00A3171A /* CommunityScrollDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommunityScrollDataModel.m; sourceTree = "<group>"; };
+		0429692A1D2C9D3C004D2CDC /* icon_pull_share_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_pull_share_black@2x.png"; sourceTree = "<group>"; };
+		0429692C1D2C9D40004D2CDC /* icon_bbs_titlebar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_bbs_titlebar@2x.png"; sourceTree = "<group>"; };
+		0429692E1D2CE109004D2CDC /* CusNavigationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CusNavigationVC.h; sourceTree = "<group>"; };
+		0429692F1D2CE109004D2CDC /* CusNavigationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CusNavigationVC.m; sourceTree = "<group>"; };
+		042969311D2CFA7E004D2CDC /* StarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarModel.h; sourceTree = "<group>"; };
+		042969321D2CFA7E004D2CDC /* StarModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarModel.m; sourceTree = "<group>"; };
 		04CB17B51D2C65F70051735E /* SQSAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQSAction.h; sourceTree = "<group>"; };
 		04CB17B61D2C65F70051735E /* SQSAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQSAction.m; sourceTree = "<group>"; };
 		04CB17B81D2C66010051735E /* SQSComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQSComponent.h; sourceTree = "<group>"; };
@@ -224,6 +234,8 @@
 				04292BC11D2BDBE200A3171A /* CommunityCommentsModel.m */,
 				04292BC21D2BDBE200A3171A /* CommunityShareModel.h */,
 				04292BC31D2BDBE200A3171A /* CommunityShareModel.m */,
+				042969311D2CFA7E004D2CDC /* StarModel.h */,
+				042969321D2CFA7E004D2CDC /* StarModel.m */,
 				04CB17BB1D2C7E9F0051735E /* SQSItems.h */,
 				04CB17BC1D2C7E9F0051735E /* SQSItems.m */,
 				04CB17B51D2C65F70051735E /* SQSAction.h */,
@@ -282,6 +294,8 @@
 			children = (
 				04292BCE1D2BDCF800A3171A /* CommunityVC.h */,
 				04292BCF1D2BDCF800A3171A /* CommunityVC.m */,
+				0429692E1D2CE109004D2CDC /* CusNavigationVC.h */,
+				0429692F1D2CE109004D2CDC /* CusNavigationVC.m */,
 			);
 			path = CommunityVC;
 			sourceTree = "<group>";
@@ -375,6 +389,8 @@
 		04292BB11D2BDB5A00A3171A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0429692C1D2C9D40004D2CDC /* icon_bbs_titlebar@2x.png */,
+				0429692A1D2C9D3C004D2CDC /* icon_pull_share_black@2x.png */,
 				04292BB51D2BDB8400A3171A /* QHJCusTableViewCell.h */,
 				04292BB61D2BDB8400A3171A /* QHJCusTableViewCell.m */,
 			);
@@ -475,9 +491,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				041F02171D28E66100BD62E0 /* bottom_clothes_icon_on@2x.png in Resources */,
+				0429692D1D2C9D40004D2CDC /* icon_bbs_titlebar@2x.png in Resources */,
 				041F02071D28DE4400BD62E0 /* icon_shopping64x64@2x.png in Resources */,
 				041F02031D28DE4400BD62E0 /* button_head_massage@2x.png in Resources */,
 				041F02091D28DE4400BD62E0 /* icon_waitDownload@2x.png in Resources */,
+				0429692B1D2C9D3C004D2CDC /* icon_pull_share_black@2x.png in Resources */,
 				041F01F81D28DE4400BD62E0 /* bottom_bbs_icon@3x.png in Resources */,
 				041F01F71D28DE4400BD62E0 /* 960-640-3.png in Resources */,
 				041F02051D28DE4400BD62E0 /* button_massage@3x.png in Resources */,
@@ -570,11 +588,13 @@
 				04292BC81D2BDBE200A3171A /* CommunityCommentsModel.m in Sources */,
 				041F01531D28432900BD62E0 /* AppDelegate.m in Sources */,
 				04292BC91D2BDBE200A3171A /* CommunityShareModel.m in Sources */,
+				042969331D2CFA7E004D2CDC /* StarModel.m in Sources */,
 				041F019B1D28953700BD62E0 /* HiChaoVC.m in Sources */,
 				0400442B1D2B5D6B008066AC /* SQSRequest.m in Sources */,
 				04292BC71D2BDBE200A3171A /* CommunitySupportUsersModel.m in Sources */,
 				04292BD01D2BDCF800A3171A /* CommunityVC.m in Sources */,
 				04292BB71D2BDB8400A3171A /* QHJCusTableViewCell.m in Sources */,
+				042969301D2CE109004D2CDC /* CusNavigationVC.m in Sources */,
 				04292BC51D2BDBE200A3171A /* CommunityHeadPicModel.m in Sources */,
 				040044331D2B7B04008066AC /* RegionModel.m in Sources */,
 				041F01AA1D2895F900BD62E0 /* MatchVC.m in Sources */,
