@@ -32,6 +32,10 @@
 #import "SQSAction.h"
 #import "SQSComponent.h"
 #import "SQSItems.h"
+#import "DataSpecialModels.h"
+#import "SQSCustomTableViewCell.h"
+#import "XLPlainFlowLayout.h"
+
 //QHJ 导入文件
 #import "CommunityScrollDataModel.h"
 #import "QHJRequestDataTools.h"

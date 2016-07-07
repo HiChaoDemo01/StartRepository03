@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MatchVC : UIViewController
+#import "MatchBaseVC.h"
+@interface MatchVC : MatchBaseVC
 
 @end

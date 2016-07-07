@@ -9,6 +9,7 @@
 #import "MainVC.h"
 
 #define TIMELIMITTGAG 500
+
 @interface MainVC ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 {
     UIScrollView *_topScrollView;
@@ -16,6 +17,8 @@
     UITableView *_goodsTableView;
     UICollectionView *_goodsCollectionView;
     UILabel *_scrollLabel;
+    UIView *_bgView;
+    UIView *_collectionBGView;
     
     
     
@@ -28,6 +31,10 @@
 @property (nonatomic,strong)NSMutableArray *collectionArr;
 @property (nonatomic,strong)NSMutableArray *titleArr;
 @property (nonatomic,strong)UIButton *selectedBtn;
+@property (nonatomic,strong)NSMutableArray *urlDataArr;
+@property (nonatomic,strong)NSMutableArray *stateArr;
+@property (nonatomic,strong)NSArray *locationArr;
+
 
 @end
 
@@ -101,14 +108,48 @@
     }
     return _titleArr;
 }
+
+- (NSMutableArray *)stateArr {
+    
+    if (!_stateArr) {
+        
+        _stateArr = [NSMutableArray arrayWithObjects:@"1",@"0",@"0",@"0", nil];
+    }
+    return _stateArr;
+}
+
+
+- (NSArray *)locationArr {
+    
+    if (!_locationArr) {
+        
+        _locationArr = [NSArray arrayWithObjects:@"60",@"153.5",@"247",@"340.5", nil];
+        
+    }
+    return _locationArr;
+    
+}
+
+- (NSMutableArray *)urlDataArr {
+    
+    
+    if (!_urlDataArr) {
+        
+        _urlDataArr = [NSMutableArray arrayWithObjects:@"http://api-v2.mall.hichao.com/sku/list?more_items=1&type=selection&flag=90246&gc=appstore&gf=iphone&gn=mxyc_ip&gv=6.6.3&gi=282DC040-8A37-4D6D-92A1-55AC237988B1&gs=640x1136&gos=8.4&access_token",@"http://api-v2.mall.hichao.com/sku/list?more_items=1&flag=&ga=%2Fsku%2Flist&category_ids=38%2C33%2C34&type=selection",@"http://api-v2.mall.hichao.com/sku/list?more_items=1&flag=&ga=%2Fsku%2Flist&category_ids=39%2C40&type=selection",@"http://api-v2.mall.hichao.com/sku/list?more_items=1&flag=&ga=%2Fsku%2Flist&category_ids=49%2C45%2C48%2C46%2C44&type=selection", nil];
+    }
+    
+    return _urlDataArr;
+    
+}
                                  
 #pragma mark------创建顶部的scrollView
 - (void)createTopScrollView {
     
     UIView *bgView = [[UIView alloc]init];
     bgView.backgroundColor = [UIColor clearColor];
-    bgView.frame = CGRectMake(0, 0, kMainBoundsW, 300);
+    bgView.frame = CGRectMake(0, 50, kMainBoundsW, kMainBoundsH );
     [_bgScrollVIew addSubview:bgView];
+    _bgView = bgView;
     
     _bgScrollVIew.delegate = self;
     _bgScrollVIew.showsVerticalScrollIndicator = NO;
@@ -149,7 +190,7 @@
         topPC.currentPageIndicatorTintColor = [UIColor redColor];
         [topPC addTarget:self action:@selector(changeTopScrollViewImage) forControlEvents:UIControlEventValueChanged];
         
-        [bgView addSubview:topPC];
+        [_bgView addSubview:topPC];
         _topPC = topPC;
         
     }];
@@ -176,12 +217,13 @@
             
             UIButton *timeLimitButton = [UIButton buttonWithType:UIButtonTypeCustom];
             SQSTimelimitModel *modle = self.timelimitArr[i];
+            timeLimitButton.tag = TIMELIMITTGAG +i;
            
             [timeLimitButton sd_setBackgroundImageWithURL:[NSURL URLWithString:modle.img_index] forState:UIControlStateNormal];
-            timeLimitButton.frame =CGRectMake(10 + (kMainBoundsW-30)/2 *i, 320, (kMainBoundsW-30)/2, 250);
-            timeLimitButton.tag = TIMELIMITTGAG +i;
+            timeLimitButton.frame =CGRectMake(10 + (kMainBoundsW-20)/2 *i,300, (kMainBoundsW-30)/2, 250);
             
-            [_bgScrollVIew addSubview:timeLimitButton];
+            
+            [_bgView addSubview:timeLimitButton];
             
             UILabel *endLabel = [UILabel new];
             endLabel.frame = CGRectMake(20, 50, 60, 30);
@@ -189,6 +231,17 @@
             endLabel.font = [UIFont systemFontOfSize:15];
             [timeLimitButton addSubview:endLabel];
             
+            
+            
+            for (NSInteger i = 0; i < 3; i++) {
+                
+                UILabel *label  =[[UILabel alloc]init];
+                label.frame = CGRectMake(20+(20+5)*i, CGRectGetMaxY(endLabel.frame), 20, 20);
+                label.backgroundColor = [UIColor blackColor];
+                label.tag = i;
+                [timeLimitButton addSubview:label];
+                
+            }
             
             NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
             [formatter setDateFormat:@"HH:mm:ss"];
@@ -217,9 +270,10 @@
     }];
     
     
+
     
     
-    UITableView *goodsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 580, kMainBoundsW, kMainBoundsH) style:UITableViewStyleGrouped];
+    UITableView *goodsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 30, kMainBoundsW, kMainBoundsH) style:UITableViewStyleGrouped];
     
     
     goodsTableView.dataSource = self;
@@ -232,6 +286,7 @@
     
     _goodsTableView = goodsTableView;
     
+    _bgScrollVIew.contentSize =CGSizeMake(0, CGRectGetMaxY(goodsTableView.frame));
    
     
 }
@@ -239,13 +294,20 @@
 #pragma mark-------创建最下面的CollectionView
 - (void)createCollectionView {
     
+    UIView *collectionBGView = [[UIView alloc]init];
+    _collectionBGView = collectionBGView;
+    
+    
     [SQSRequest sendRequestFroCollectionViewData:^(NSArray *dataArr) {
         
         [self.collectionArr addObjectsFromArray:dataArr];
         
         
         [_goodsCollectionView reloadData];
-    }];
+    
+        
+    } withUrl:self.urlDataArr[0]];
+    
     
     [SQSRequest sendRequestFrocollectionViewHeaderTitile:^(NSArray *titleArr) {
         
@@ -253,23 +315,26 @@
         
     }];
     
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+    XLPlainFlowLayout *layout = [[XLPlainFlowLayout alloc]init];
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
+    layout.naviHeight =10;
     
-    UICollectionView *goodsCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_goodsTableView.frame) + 20, kMainBoundsW, kMainBoundsH) collectionViewLayout:layout];
+    UICollectionView *goodsCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, kMainBoundsW, kMainBoundsH) collectionViewLayout:layout];
     goodsCollectionView.dataSource = self;
     goodsCollectionView.delegate =self;
     goodsCollectionView.backgroundColor = [UIColor whiteColor];
     goodsCollectionView.showsVerticalScrollIndicator = NO;
+
     [goodsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"coll"];
+    
     
     [goodsCollectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     
-    [_bgScrollVIew addSubview:goodsCollectionView];
+    [_collectionBGView addSubview:goodsCollectionView];
     _goodsCollectionView = goodsCollectionView;
     
-     _bgScrollVIew.contentSize = CGSizeMake(kMainBoundsW, CGRectGetMaxY(goodsCollectionView.frame));
+     _bgScrollVIew.contentSize = CGSizeMake(0, CGRectGetMaxY(_goodsTableView.frame));
     
     
 }
@@ -353,6 +418,10 @@
         [view1 removeFromSuperview];
     }
     
+    UIView *BGVIew =[[UIView alloc]init];
+    BGVIew.frame = view.frame;
+    BGVIew.backgroundColor =[UIColor whiteColor];
+    [view addSubview:BGVIew];
     
     for (NSInteger i =0; i < 4; i++) {
         UIButton *btn =[UIButton buttonWithType:UIButtonTypeCustom];
@@ -363,15 +432,20 @@
         [btn setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         
+        if ([self.stateArr[i] isEqualToString:@"1"]) {
+            
+            btn.selected = YES;
+        }
+        
         btn.tag = i;
         [btn addTarget:self action:@selector(collectionViewTitleClick:) forControlEvents:UIControlEventTouchUpInside];
-        [view addSubview:btn];
+        [BGVIew addSubview:btn];
         
     }
     
     UILabel *scrollLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 50, kMainBoundsW/4, 3)];
     scrollLabel.backgroundColor =[UIColor redColor];
-    [view addSubview:scrollLabel];
+    [BGVIew addSubview:scrollLabel];
     _scrollLabel = scrollLabel;
     
     
@@ -384,16 +458,86 @@
     
     
     _selectedBtn.selected = NO;
-    sender.selected = YES;
     
     
-      
-       _scrollLabel.center = CGPointMake(sender.center.x, 52);
+    [self.stateArr replaceObjectAtIndex:sender.tag withObject:@"1"];
+    
+    if (_selectedBtn) {
+        
+        [self.stateArr replaceObjectAtIndex:_selectedBtn.tag withObject:@"0"];
+    }
+    
+    
+    
+       NSString *pointStr = self.locationArr[sender.tag];
+    
+    CGFloat x = [pointStr floatValue];
+
+    
+   
+    
     
     _selectedBtn = sender;
     
     
     
+    switch (sender.tag) {
+        case 0:{
+          [SQSRequest sendRequestFroCollectionViewData:^(NSArray *dataArr) {
+              
+              [self.collectionArr removeAllObjects];
+              [self.collectionArr addObjectsFromArray:dataArr];
+              
+              [_goodsCollectionView reloadData];
+
+          } withUrl:self.urlDataArr[sender.tag]];
+            
+            break;
+            }
+        case 1:{
+            
+            [SQSRequest sendRequestFroCollectionViewData:^(NSArray *dataArr) {
+                
+                [self.collectionArr removeAllObjects];
+                [self.collectionArr addObjectsFromArray:dataArr];
+                
+                [_goodsCollectionView reloadData];
+                
+            } withUrl:self.urlDataArr[sender.tag]];
+            
+            break;
+        }
+
+        case 2:{
+            [SQSRequest sendRequestFroCollectionViewData:^(NSArray *dataArr) {
+                
+                [self.collectionArr removeAllObjects];
+                [self.collectionArr addObjectsFromArray:dataArr];
+                
+                [_goodsCollectionView reloadData];
+                
+            } withUrl:self.urlDataArr[sender.tag]];
+            
+            break;
+        }
+
+        case 3:{
+            [SQSRequest sendRequestFroCollectionViewData:^(NSArray *dataArr) {
+            
+            [self.collectionArr removeAllObjects];
+            [self.collectionArr addObjectsFromArray:dataArr];
+            
+            [_goodsCollectionView reloadData];
+            
+        } withUrl:self.urlDataArr[sender.tag]];
+            
+            break;
+        }
+
+        default:
+            break;
+    }
+     _scrollLabel.center = CGPointMake(x, 52);
     
 }
 
@@ -441,6 +585,9 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
+    if (section == 0) {
+        return kMainBoundsH - 100;
+    }
     
     return 100;
 }
@@ -448,6 +595,23 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
+    
+    if (section == 0) {
+        
+        UIButton *headerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        headerBtn.frame =CGRectMake(0, 550, kMainBoundsW, 80);
+        
+        RegionModel *model =_goodsMessageArr[section];
+        
+        
+        [headerBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model.region_name[0]] forState:UIControlStateNormal];
+        [_bgView addSubview:headerBtn];
+
+        
+        return _bgView;
+        
+    }
+        
     
     UIButton *headerBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     headerBtn.frame =CGRectMake(0, 0, kMainBoundsW, 0);
@@ -523,7 +687,7 @@
                 
                 
             }
-            bgScrollView.contentSize = CGSizeMake(kMainBoundsW * model.region_brands.count, 0);
+            bgScrollView.contentSize = CGSizeMake(kMainBoundsW * model.region_pictures.count , 0);
             
             
             break;
@@ -558,12 +722,9 @@
                 priceLabel.text = [NSString stringWithFormat:@"原价:￥%@",goodsModle.origin_price];
                 priceLabel.textColor = [UIColor lightGrayColor];
                 [pictureBtn addSubview:priceLabel];
-
-                
-                
                 
             }
-            bgScrollView.contentSize = CGSizeMake(150j * model.region_brands.count, 0);
+            bgScrollView.contentSize = CGSizeMake(120 * model.region_skus.count, 0);
             
             
             break;
@@ -577,7 +738,31 @@
     
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    
+    
+    
+    if (section == 5) {
+        
+        return _collectionBGView;
+    }else{
+        return nil;
+    }
+}
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    
+    
+    
+    
+    if (section == 5) {
+        return kMainBoundsH;
+    }else{
+        
+        return 0;
+    }
+    
+}
 
 
 
@@ -585,22 +770,19 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     
-    if (scrollView == _bgScrollVIew) {
-        
-        
-        UIButton *btn = [_bgScrollVIew viewWithTag:TIMELIMITTGAG ];
-        
-        if (_bgScrollVIew.contentOffset.y < CGRectGetHeight(btn.frame)) {
-            
-            _goodsTableView.userInteractionEnabled = NO;
-            
-        }else {
-            
-             _goodsTableView.userInteractionEnabled = YES;
-            
-        }
-        
-    }
+//    if (scrollView ==_goodsCollectionView) {
+//       
+////        _goodsTableView.scrollEnabled = YES;
+//        
+//        
+//        
+//    }
+    
+    
+    
+    
+    
+    
     
     
 }
