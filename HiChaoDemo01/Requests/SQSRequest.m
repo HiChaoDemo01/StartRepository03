@@ -139,8 +139,6 @@
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
             NSDictionary *dataDic = dic[@"data"];
             RegionModel *model = [RegionModel createRegionModelWith:dataDic];
-            
-
             [goodsDataArr addObject:model];
             
             if (i==6 && complete) {
@@ -160,13 +158,13 @@
     
 }
 #pragma mark----请求collectionView的数据
-+ (void)sendRequestFroCollectionViewData:(void(^)(NSArray *dataArr))complete {
++ (void)sendRequestFroCollectionViewData:(void(^)(NSArray *dataArr))complete withUrl:(NSString *)url{
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
     manager.requestSerializer.timeoutInterval = 10.f;
-    [manager GET:@"http://api-v2.mall.hichao.com/sku/list?more_items=1&type=selection&flag=90246&gc=appstore&gf=iphone&gn=mxyc_ip&gv=6.6.3&gi=282DC040-8A37-4D6D-92A1-55AC237988B1&gs=640x1136&gos=8.4&access_token" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager GET:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         
         if (responseObject) {
@@ -214,7 +212,7 @@
         for (NSDictionary *dic in itemsArr) {
             SQSItems *titlemodel = [SQSItems modelObjectWithDictionary:dic];
             
-            NSLog(@"%@",titlemodel.navName);
+            
             [titleArr addObject:titlemodel];
             
         }
@@ -233,12 +231,49 @@
         NSLog(@"%@",error.localizedDescription);
         
     }];
+  
+    
+}
+
+#pragma mark------发送请求获得专题界面的数据
++ (void)sendRequestFroSpecialVCData:(void(^)(NSArray * dataArr))complete {
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
+    [manager GET:@"http://api-v2.mall.hichao.com/mix_topics?category=&ga=%2Fmix_topics&flag=" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        
+        if (responseObject) {
+            NSDictionary *dic =[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
+            NSDictionary *dataDic =dic[@"data"];
+            NSArray *itemsArr = dataDic[@"items"];
+            
+            NSMutableArray *dataArray = [NSMutableArray array];
+            for (NSDictionary *dic in itemsArr) {
+                NSDictionary *componentDic = dic[@"component"];
+                SQSSpeciaComponent *model =[SQSSpeciaComponent modelObjectWithDictionary:componentDic];
+                [dataArray addObject:model];
+                
+                
+            }
+            if (complete) {
+                
+                complete(dataArray);
+            }
+        }
+       
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+        NSLog(@"%@",error.localizedDescription);
+        
+    }];
     
     
     
     
     
 }
-
 
 @end

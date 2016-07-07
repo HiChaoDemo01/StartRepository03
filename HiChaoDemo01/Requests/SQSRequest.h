@@ -22,8 +22,10 @@
 + (void)sendRequestFroGoodsMessage:(void(^)(NSArray *messageArr))complete;
 
 //发送请求，获得首页的collectionView数据
-+ (void)sendRequestFroCollectionViewData:(void(^)(NSArray *dataArr))complete;
++ (void)sendRequestFroCollectionViewData:(void(^)(NSArray *dataArr))complete withUrl:(NSString *)url;
 //发送请求，获得collectionView的头标题
 + (void)sendRequestFrocollectionViewHeaderTitile:(void(^)(NSArray *titleArr))complete;
+//发送请求获得专题界面数据
++ (void)sendRequestFroSpecialVCData:(void(^)(NSArray * dataArr))complete;
 
 @end
