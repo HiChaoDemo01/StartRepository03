@@ -14,7 +14,7 @@
 {
     if (self=[super init]) {
         [self setValuesForKeysWithDictionary:dic];
-       // NSLog(@"%@--%@--%@--%@--%ld",self.userName,self.commentCount,self.datatime,self.avatarModel.userAvatar,self.pics.count);
+        
     }
     return self;
 }
@@ -53,7 +53,18 @@
     {
         self.shareModel=[CommunityShareModel createCommunityShareModelWith:value[@"share"]];
     }
-    else
+    else if ([key isEqualToString:@"focus_users"])
+    {
+        self.focus_users=[NSMutableArray new];
+        for (int i=0; i<[(NSArray *)value count]; i++) {
+            NSDictionary *tempDic=value[i];
+            [self.focus_users addObject:[StarModel createStarDesriptionModel:tempDic]];
+        
+        
+        }
+        NSLog(@"self.focus_users--count:%ld",self.focus_users.count);
+    }
+      else
     {
         [super setValue:value forKey:key];
     }

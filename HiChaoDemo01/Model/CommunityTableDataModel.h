@@ -12,10 +12,13 @@
 #import "CommunityHeadPicModel.h"
 #import "CommunitySupportUsersModel.h"
 #import "CommunityShareModel.h"
+#import "StarModel.h"
 @interface CommunityTableDataModel : NSObject
-@property(copy,nonatomic)NSString *userName,*datatime,*commentCount,*content;
+@property(copy,nonatomic)NSString *userName,*datatime,*commentCount,*content,*componentType;
 @property(strong,nonatomic)CommunityHeadPicModel *avatarModel;
 @property(strong,nonatomic)CommunityShareModel *shareModel;
+@property(strong,nonatomic)StarModel *starModel;
+@property(strong,nonatomic)NSMutableArray *focus_users;
 @property(strong,nonatomic)NSMutableArray *pics;
 @property(strong,nonatomic)NSMutableArray *tags;
 @property(strong,nonatomic)NSMutableArray *users;
